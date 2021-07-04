@@ -15,6 +15,17 @@ button:focus-visible {
   box-shadow: 0 0 0 2px #006782;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0)
+}
+
 .app-wrap {
   position: relative;
   display: flex;
@@ -55,10 +66,13 @@ button:focus-visible {
 .todo-list {
   min-width: 500px;
   min-height: 40px;
+  max-height: 80vh;
   padding: 16px;
   border-radius: 5px;
   backdrop-filter: blur(10px);
   background-color: rgba(255, 255, 255, 0.5); 
+  transition: height .2s linear;
+  overflow-y: auto;
 }
 
 .create-todo {
@@ -66,20 +80,26 @@ button:focus-visible {
   align-items: center;
 }
 
+.create-todo__holder {
+  display: none;
+  direction: row;
+  align-items: center;
+}
+
+.create-todo__holder--show {
+  display: flex;
+}
+
 .create-todo__add {
   width: 40px;
   height: 40px;
   margin-right: 16px;
   padding: 0;
-  background-color: #006782;
-  -webkit-mask-image: url('../img/add.svg');
-  mask-image: url('../img/add.svg');
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 40px 40px;
-  mask-size: 40px 40px;;
-  -webkit-mask-position: center;
-  mask-position: center;
+  background-color: transparent;
+  background-image: url('../img/add.svg');
+  background-repeat: no-repeat;
+  background-size: 40px 40px;;
+  background-position: center;
   transition: transform .3s;
 }
 
@@ -103,4 +123,128 @@ button:focus-visible {
   background-repeat: no-repeat;
   background-size: 0%;
   transition: background-size .2s ease-in;
+}
+
+.create-todo__input {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  width: 0;
+}
+
+.create-todo__input--show {
+  display: flex;
+  animation: input-show .3s linear forwards;
+}
+
+@keyframes input-show {
+  50% {
+    width: 90%;
+  }
+
+  100% {
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+.create-todo__text {
+  font-size: 28px;
+  line-height: 37px;
+  margin-right: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid 1px #005;
+  color: #005;
+  flex-grow: 1;
+  outline: 0;
+}
+
+.create-todo__submit {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: transparent;
+  background-image: url('../img/forward.svg');
+  background-repeat: no-repeat;
+  background-size: 40px 40px;;
+  background-position: center;
+  transform: rotate(90deg);
+  flex-shrink: 0;
+}
+
+.create-todo__submit:hover,
+.create-todo__submit:focus {
+  animation: shake 1s linear infinite;
+}
+
+@keyframes shake {
+  25% {
+    transform: rotate(90deg) translateX(-4px);
+  }
+
+  75% {
+    transform: rotate(90deg) translateX(4px);
+  }
+}
+
+.todo-list__inner {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.list-item {
+  font-size: 24px;
+  margin-top: 16px;
+}
+
+.list-item__text {
+  margin-left: 44px;
+}
+
+.list-item__img {
+  position: relative;
+}
+
+.list-item__img:before,
+.list-item__img:after {
+  position: absolute;
+  content: '';
+  display: block;
+  cursor: pointer;
+}
+
+.list-item__img:before {
+  top: 2px;
+  left: 7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: solid 3px #006782;
+}
+
+.list-item__img:after {
+  content: none;
+  bottom: 16px;
+  right: -33px;
+  width: 24px;
+  height: 16px;
+  border-top: solid 4px #006782;
+  border-right: solid 4px #006782;
+  transform: rotate(128deg);
+  animation: check .3s linear forwards;
+}
+
+.list-item__mark:checked + .list-item__img:after {
+  content: '';
+}
+
+@keyframes check {
+  /* 100% {
+    width: 24px;
+  } */
 }

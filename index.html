@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Varela&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css" type="text/css" />
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
   <title>JS</title>
 </head>
 <body>
@@ -16,17 +17,21 @@
     <h2 class="app-wrap__title">TODO list</h2>
     <div class="todo-list">
       <form class="create-todo">
-        <button class="create-todo__add" type="button" aria-label="Add TODO"></button>
-        <span class="create-todo__title">Add New TODO</span>
-        <input style="display: none;" class="create-todo__text" type="text" placeholder="Write TODO text">
-        <button style="display: none;" class="create-todo__submit" type="submit">-></button>
+        <div class="create-todo__holder create-todo__holder--show">
+          <button class="create-todo__add" type="button" aria-label="Add TODO"></button>
+          <span class="create-todo__title">Add New TODO</span>
+        </div>
+        <div class="create-todo__input">
+          <input class="create-todo__text" type="text" placeholder="Write TODO text">
+          <button class="create-todo__submit" type="submit" aria-label="Submit TODO"></button>
+        </div>
       </form>
-      <ul class="todo-list__inner" style="display: none;">
+      <ul class="todo-list__inner">
         <li class="list-item">
-          <label class="list-item__inner">
-            <input class="list-item__mark" type="checkbox">
-            Pet the cat
+          <input class="list-item__mark visually-hidden" type="checkbox" id="todo-mark">
+          <label class="list-item__img" for="todo-mark">
           </label>
+          <span class="list-item__text"> Pet the cat </span>
           <button class="list-item__remove" type="button">del</button>
         </li>
       </ul>
