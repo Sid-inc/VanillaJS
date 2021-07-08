@@ -205,6 +205,13 @@ button:focus-visible {
   font-size: 24px;
   width: 500px;
   margin-top: 16px;
+  animation: todo-add .2s linear forwards;
+}
+
+@keyframes todo-add {
+  from {
+    margin-top: 0;
+  }
 }
 
 .list-item:hover .list-item__remove {
@@ -216,6 +223,7 @@ button:focus-visible {
   background-size: 0 2px;
   background-position: 0 calc(50% + 2px);
   background-repeat: no-repeat;
+  word-break: break-all;
   color: #005;
   transition: background-size .2s linear, opacity .2s linear;
 }

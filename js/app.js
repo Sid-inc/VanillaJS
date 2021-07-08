@@ -12,35 +12,77 @@ const todoStorage = { //Работа с local storage
     if (todoItemsList) return true;
   },
 
-  addRecord(id, text, state) { //Добавление записи в local storage
+  getRecord(name) {
+    return JSON.parse(localStorage.getItem(name) || "[]");
+  },
+
+  setRecord(name, data) {
+    localStorage.setItem(name, JSON.stringify(data))
+  },
+
+  addNewRecord(id, text, state) { 
     record = {
       id,
       text,
       state,
-    } 
-    let storageItemsList = JSON.parse(localStorage.getItem("todoItemsList") || "[]");
+    }; 
+    let storageItemsList = this.getRecord('todoItemsList');
     storageItemsList.push(record);
-    localStorage.setItem("todoItemsList", JSON.stringify(storageItemsList));
+    this.setRecord('todoItemsList', storageItemsList);
+  },
+
+  removeRecord(id) {
+    let storageItemsList = this.getRecord('todoItemsList');
+    for (let todo in storageItemsList) {
+      if (storageItemsList[todo].id === +id) {
+        storageItemsList.splice(todo, 1);
+      }
+    }
+    this.setRecord('todoItemsList', storageItemsList);
   },
 
   changeState(id) {
-
+    let storageItemsList = this.getRecord('todoItemsList');
+    for (let todo in storageItemsList) {
+      if (storageItemsList[todo].id === +id) {
+        if (storageItemsList[todo].state === 'inProgress') {
+          storageItemsList[todo].state = 'finished';
+        } else {
+          storageItemsList[todo].state = 'inProgress';
+        }
+        break;
+      };
+    }
+    this.setRecord('todoItemsList', storageItemsList);
   },
+};
+
+window.onload = () => { // Вывод имеющихся в local storage todo после загрузки страницы
+  if(todoStorage.emptyListCheck()) {
+    let currentList = todoStorage.getRecord('todoItemsList');
+    todoCount = currentList.length;
+    let state = false;
+    for (let todo in currentList) {
+      (currentList[todo].state === 'finished') ? state = true : state = false;
+      renderTodo(templateListItem(currentList[todo].id, currentList[todo].text, state));
+    }
+  }
 }
 
-function templateListItem(itemId, itemText) { //Заполнение шаблона для вывода TODO
-    let template = document.getElementById('todo-item');
-    let itemIdSet = template.content.querySelectorAll('.list-item')[0];
-    let itemMarkSet = template.content.querySelectorAll('.list-item__mark')[0];
-    let itemImgSet = template.content.querySelectorAll('.list-item__img')[0];
-    let itemTextSet = template.content.querySelectorAll('.list-item__text')[0];
+function templateListItem(itemId, itemText, state) { //Заполнение шаблона для вывода TODO
+  let template = document.getElementById('todo-item');
+  let itemIdSet = template.content.querySelectorAll('.list-item')[0];
+  let itemMarkSet = template.content.querySelectorAll('.list-item__mark')[0];
+  let itemImgSet = template.content.querySelectorAll('.list-item__img')[0];
+  let itemTextSet = template.content.querySelectorAll('.list-item__text')[0];
+  
+  itemIdSet.id = 'todo-item-' + itemId;
+  itemMarkSet.id = 'todo-mark' + itemId;
+  state ? itemMarkSet.checked = true : itemMarkSet.checked = false;
+  itemImgSet.setAttribute('for', 'todo-mark' + itemId);
+  itemTextSet.innerHTML = itemText;
 
-    itemIdSet.id = 'todo-item-' + itemId;
-    itemMarkSet.id = 'todo-mark' + itemId;
-    itemImgSet.setAttribute('for', 'todo-mark' + itemId);
-    itemTextSet.innerHTML = itemText;
-
-    return document.importNode(template.content, true);
+  return document.importNode(template.content, true);
 }
 
 function renderTodo(todoItem) { //Вывод TODO в список
@@ -58,14 +100,22 @@ function todoValidation() { //Проверка на пустое значени�
   return false;
 }
 
-function todoChangeState(todoMark) {
-  console.log(todoMark);
-  //Получаем цифру id у родителя элемента
-  todoStorage.changeState(id);
+function getTodoId(mark) { // Получение ID родительского ли по дочернему элементу
+  let fullId = mark.parentNode.id;
+  return fullId.replace(/\D+/, '');
 }
 
-window.addEventListener("change", (event) => {
+function todoChangeState(todoMark) { //Меняем статус TODO в local storage
+  let todoId = getTodoId(todoMark);
+  todoStorage.changeState(todoId);
+}
+
+window.addEventListener("change", (event) => { // Поиск изменения состояния галки - выполнено
   if (event.target.classList.contains('list-item__mark')) todoChangeState(event.target);
+});
+
+window.addEventListener("click", (event) => { // Поиск клика по кнопке удаления
+  if (event.target.classList.contains('list-item__remove')) removeTodo(event.target);
 });
 
 addBtn.addEventListener('click', () => { //Клик по нопке с плюсом
@@ -84,9 +134,15 @@ function createTodo() { //Создание TODO
   let todo = {
     id: ++todoCount,
     text: todoText,
-  }
-  renderTodo(templateListItem(todo.id, todo.text));
-  todoStorage.addRecord(todo.id, todo.text, 'inProgress');
+  };
+  renderTodo(templateListItem(todo.id, todo.text, false));
+  todoStorage.addNewRecord(todo.id, todo.text, 'inProgress');
   switchInputState();
   createTodoAction.getElementsByClassName('create-todo__text')[0].value = '';
+}
+
+function removeTodo(todoRemove) {
+  let todoId = getTodoId(todoRemove);
+  todoRemove.parentNode.remove();
+  todoStorage.removeRecord(todoId) 
 }
