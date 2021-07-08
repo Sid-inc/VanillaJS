@@ -144,5 +144,5 @@ function createTodo() { //Создание TODO
 function removeTodo(todoRemove) {
   let todoId = getTodoId(todoRemove);
   todoRemove.parentNode.remove();
-  todoStorage.removeRecord(todoId) 
+  todoStorage.removeRecord(todoId);
 }
