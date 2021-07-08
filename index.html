@@ -16,9 +16,9 @@
   <section class="app-wrap todo-list-wrap">
     <h2 class="app-wrap__title">TODO list</h2>
     <div class="todo-list">
-      <form class="create-todo">
+      <form class="create-todo" id="create-todo">
         <div class="create-todo__holder create-todo__holder--show">
-          <button class="create-todo__add" type="button" aria-label="Add TODO"></button>
+          <button class="create-todo__add" type="button" aria-label="Add todo"></button>
           <span class="create-todo__title">Add New TODO</span>
         </div>
         <div class="create-todo__input">
@@ -27,15 +27,28 @@
         </div>
       </form>
       <ul class="todo-list__inner">
-        <li class="list-item">
+        <!-- <li class="list-item">
           <input class="list-item__mark visually-hidden" type="checkbox" id="todo-mark">
           <label class="list-item__img" for="todo-mark">
           </label>
-          <span class="list-item__text"> Pet the cat </span>
-          <button class="list-item__remove" type="button">del</button>
-        </li>
+          <div class="list-item__text-wrap">
+            <span class="list-item__text"> Pet the cat </span>
+          </div>
+          <button class="list-item__remove" type="button" aria-label="Delete current todo"></button>
+        </li> -->
       </ul>
     </div>
+    <template id="todo-item">
+      <li class="list-item">
+        <input class="list-item__mark visually-hidden" type="checkbox" id="todo-mark">
+        <label class="list-item__img" for="todo-mark">
+        </label>
+        <div class="list-item__text-wrap">
+          <span class="list-item__text"> Pet the cat </span>
+        </div>
+        <button class="list-item__remove" type="button" aria-label="Delete current todo"></button>
+      </li>
+    </template>
   </section>
   <script src="js/app.js"></script>
 </body>

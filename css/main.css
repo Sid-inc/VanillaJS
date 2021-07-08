@@ -101,6 +101,7 @@ button:focus-visible {
   background-size: 40px 40px;;
   background-position: center;
   transition: transform .3s;
+  transition-delay: .2s;
 }
 
 .create-todo__add:hover,
@@ -123,6 +124,7 @@ button:focus-visible {
   background-repeat: no-repeat;
   background-size: 0%;
   transition: background-size .2s ease-in;
+  transition-delay: .2s;
 }
 
 .create-todo__input {
@@ -153,8 +155,8 @@ button:focus-visible {
   font-size: 28px;
   line-height: 37px;
   margin-right: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
+  /* padding-left: 16px; */
+  /* padding-right: 16px; */
   background-color: transparent;
   border: none;
   border-bottom: solid 1px #005;
@@ -198,16 +200,30 @@ button:focus-visible {
 }
 
 .list-item {
+  display: grid;
+  grid-template-columns: 44px 1fr 60px;
   font-size: 24px;
+  width: 500px;
   margin-top: 16px;
 }
 
+.list-item:hover .list-item__remove {
+  opacity: 1;
+}
+
 .list-item__text {
-  margin-left: 44px;
+  background-image: linear-gradient(#005, #005);
+  background-size: 0 2px;
+  background-position: 0 calc(50% + 2px);
+  background-repeat: no-repeat;
+  color: #005;
+  transition: background-size .2s linear, opacity .2s linear;
 }
 
 .list-item__img {
   position: relative;
+  height: 0;
+  width: 0;
 }
 
 .list-item__img:before,
@@ -229,22 +245,47 @@ button:focus-visible {
 
 .list-item__img:after {
   content: none;
-  bottom: 16px;
+  bottom: -16px;
   right: -33px;
   width: 24px;
   height: 16px;
   border-top: solid 4px #006782;
   border-right: solid 4px #006782;
   transform: rotate(128deg);
-  animation: check .3s linear forwards;
 }
 
 .list-item__mark:checked + .list-item__img:after {
   content: '';
 }
 
-@keyframes check {
-  /* 100% {
-    width: 24px;
-  } */
+.list-item__mark:checked ~ .list-item__text-wrap .list-item__text {
+  background-size: 100% 2px;
+  opacity: .6;
+}
+
+.list-item__remove {
+  justify-self: end;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  background-image: url('../img/delete.svg');
+  background-repeat: no-repeat;
+  background-size: 28px 28px;;
+  background-position: center;
+  opacity: 0;
+  transition: opacity .2s ease-in;
+}
+
+.list-item__remove:hover {
+  animation: remove-shake .1s linear 4;
+}
+
+@keyframes remove-shake {
+  25% {
+    transform: rotate(10deg);
+  }
+
+  75% {
+    transform: rotate(-10deg);
+  }
 }
